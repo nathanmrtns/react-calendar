@@ -3,7 +3,7 @@ import Day from '../Day';
 import './styles.css';
 const Week = ({date, month, selected, select}) => {
   let days = [];
-
+  console.log(date);
   for (var i = 0; i < 7; i++) {
     let day = {
       name: date.format("dd").substring(0, 1),
@@ -11,7 +11,9 @@ const Week = ({date, month, selected, select}) => {
       isCurrentMonth: date.month() === month.month(),
       isToday: date.isSame(new Date(), "day"),
       date: date,
+      isWeekend: (date.day() === 0 || date.day() === 6)
     };
+    console.log(day)
     days.push(<Day key={i} day={day} selected={selected} select={select} />);
 
     date = date.clone();

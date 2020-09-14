@@ -4,11 +4,10 @@ import './styles.css'
 const Day = (props) => {
   const {
     day,
-    day: { date, isCurrentMonth, isToday, number },
+    day: { date, isCurrentMonth, isToday, number, isWeekend },
     select,
     selected,
   } = props;
-
   return (
     <span
       key={date.toString()}
@@ -16,7 +15,8 @@ const Day = (props) => {
         "day" +
         (isToday ? " today" : "") +
         (isCurrentMonth ? "" : " different-month") +
-        (date.isSame(selected) ? " selected" : "")
+        (date.isSame(selected) ? " selected" : "") +
+        (isWeekend ? " weekend" : "")
       }
       onClick={() => select(day)}
     >
