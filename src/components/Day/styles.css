@@ -1,0 +1,26 @@
+.day {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex: 1;
+  height: 100px;
+  border-left: solid 1px #CCCCCC;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+.day:hover {
+  background: #EFEFEF;
+}
+.day:first-child {
+  border-left: none;
+}
+.day.today {
+  background: #94c5fa;
+}
+.day.different-month {
+  color: #C0C0C0;
+}
+.day.selected {
+  background: #0851a0;
+  color: #FFFFFF;
+}
