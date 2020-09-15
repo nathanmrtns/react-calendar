@@ -1,32 +1,37 @@
-import React, { useState } from "react";
-import moment from "moment";
-import DayNames from "../DayNames";
-import Week from "../Week";
-import "./styles.css";
+import React, { useState } from 'react';
+import moment from 'moment';
+import { connect } from 'react-redux';
 
-const Calendar = () => {
+import { addReminder } from '../../redux';
+
+import DayNames from '../DayNames';
+import Week from '../Week';
+import './styles.css';
+
+const Calendar = ({reminders, addReminder}) => {
   const [month, setMonth] = useState(moment());
-  const [selected, setSelected] = useState(moment().startOf("day"));
+  const [selected, setSelected] = useState(moment().startOf('day'));
 
   const previous = () => {
-    const newMonth = month.subtract(1, "month").clone()
+    const newMonth = month.subtract(1, 'month').clone()
     setMonth(newMonth);
   };
 
   const next = () => {
-    const newMonth = month.add(1, "month").clone()
+    const newMonth = month.add(1, 'month').clone()
     setMonth(newMonth);
   };
 
-  const select = (day) => {
+  const select = day => {
     setSelected(day.date);
     setMonth(day.date.clone());
+    addReminder(day.date, 'Teste');
   };
 
   const renderWeeks = () => {
     let weeks = [];
     let done = false;
-    let date = month.clone().startOf("month").add("w" - 1).day("Sunday");
+    let date = month.clone().startOf('month').add('w' - 1).day('Sunday');
     let count = 0;
     let monthIndex = date.month();
 
@@ -36,12 +41,12 @@ const Calendar = () => {
           key={date}
           date={date.clone()}
           month={month}
-          select={(day) => select(day)}
+          select={day => select(day)}
           selected={selected}
-        />
+        />,
       );
 
-      date.add(1, "w");
+      date.add(1, 'w');
 
       done = count++ > 2 && monthIndex !== date.month();
       monthIndex = date.month();
@@ -51,16 +56,16 @@ const Calendar = () => {
   };
 
   const renderMonthLabel = () => {
-    return <span className="month-label">{month.format("MMMM YYYY")}</span>;
+    return <span className="month-label">{month.format('MMMM YYYY')}</span>;
   };
 
   return (
     <section className="calendar">
       <header className="header">
         <div className="month-display row">
-          <span className="arrow" onClick={previous}>{"<"}</span>
+          <span className="arrow" onClick={previous}>{'<'}</span>
           {renderMonthLabel()}
-          <span className="arrow" onClick={next}>{">"}</span>
+          <span className="arrow" onClick={next}>{'>'}</span>
         </div>
         <DayNames />
       </header>
@@ -69,4 +74,17 @@ const Calendar = () => {
   );
 };
 
-export default Calendar;
+const mapStateToProps = state => ({
+  reminders: state.reminders,
+});
+
+const mapDispatchToProps = {
+  addReminder,
+};
+
+const CalendarContainer = connect(
+  mapStateToProps,
+  mapDispatchToProps,
+)(Calendar);
+
+export default CalendarContainer;
