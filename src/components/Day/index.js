@@ -25,7 +25,7 @@ const Day = props => {
       onClick={() => select(day)}
     >
       {number}
-      {hasReminder && 'EVENTO AQUI'}
+      {hasReminder && hasReminder.title}
     </div>
   );
 };

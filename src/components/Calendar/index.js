@@ -6,11 +6,22 @@ import { addReminder } from '../../redux';
 
 import DayNames from '../DayNames';
 import Week from '../Week';
+import ReminderModal from '../ReminderModal';
 import './styles.css';
 
 const Calendar = ({reminders, addReminder}) => {
   const [month, setMonth] = useState(moment());
   const [selected, setSelected] = useState(moment().startOf('day'));
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const showModal = isOpen => {
+    setModalOpen(isOpen);
+  }
+
+  const submitReminder = (title, hour, color) => {
+    addReminder(selected, title, hour, color)
+    setModalOpen(false);
+  }
 
   const previous = () => {
     const newMonth = month.subtract(1, 'month').clone()
@@ -25,7 +36,7 @@ const Calendar = ({reminders, addReminder}) => {
   const select = day => {
     setSelected(day.date);
     setMonth(day.date.clone());
-    addReminder(day.date, 'Teste');
+    showModal(true)
   };
 
   const renderWeeks = () => {
@@ -70,6 +81,7 @@ const Calendar = ({reminders, addReminder}) => {
         <DayNames />
       </header>
       {renderWeeks()}
+      <ReminderModal modalOpen={isModalOpen} showModal={showModal} submit={submitReminder}/>
     </section>
   );
 };

@@ -4,9 +4,9 @@ import {
 } from 'redux';
 
 // actions.js
-export const addReminder = (day, title) => ({
+export const addReminder = (day, title, hour, color) => ({
   type: 'ADD_EVENT',
-  payload: {day, title},
+  payload: {day, title, hour, color},
 });
 
 // reducers.js
@@ -15,8 +15,7 @@ export const reminders = (state = {reminders: []}, action) => {
     case 'ADD_EVENT':
       let reminders = state.reminders;
       reminders.push(action.payload);
-      // console.log(state);
-      // console.log(reminders);
+      console.log(action.payload)
       console.log({...state, reminders: reminders});
       return {...state, reminders: reminders}
     default:
