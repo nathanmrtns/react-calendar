@@ -44,7 +44,7 @@ const ReminderModal = ({ modalOpen, showModal, submit }) => {
               <Form.Control
                 placeholder="Enter your reminder"
                 value={title}
-                onChange={e => setTitle(e.target.value)}
+                onChange={e => e.target.value.length <= 30 && setTitle(e.target.value)}
               />
 
               <Form.Label>Reminder Color</Form.Label>

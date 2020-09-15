@@ -11,7 +11,8 @@ const Day = props => {
     selected,
     reminders,
   } = props;
-  const hasReminder = reminders.find(r => moment(r.day).isSame(date))
+  const dayReminders = reminders[Object.keys(reminders).filter(k => moment(k).isSame(date))] || [];
+
   return (
     <div
       key={date.toString()}
@@ -25,7 +26,11 @@ const Day = props => {
       onClick={() => select(day)}
     >
       {number}
-      {hasReminder && hasReminder.title}
+      {
+        dayReminders.map(r => {
+          return <p>{r.title}</p>
+        })
+      }
     </div>
   );
 };

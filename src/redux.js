@@ -2,6 +2,7 @@ import {
   combineReducers,
   createStore,
 } from 'redux';
+import moment from 'moment';
 
 // actions.js
 export const addReminder = (day, title, hour, color) => ({
@@ -13,10 +14,16 @@ export const addReminder = (day, title, hour, color) => ({
 export const reminders = (state = {reminders: []}, action) => {
   switch (action.type) {
     case 'ADD_EVENT':
+      const {day} = action.payload;
+      let dayStr = moment(day).format('YYYY-MM-DD');
       let reminders = state.reminders;
-      reminders.push(action.payload);
-      console.log(action.payload)
-      console.log({...state, reminders: reminders});
+      if (reminders[dayStr]) {
+        reminders[dayStr].push(action.payload)
+      } else {
+        reminders[dayStr] = [action.payload]
+      }
+      // reminders.push(action.payload);
+      console.log(reminders);
       return {...state, reminders: reminders}
     default:
       return state;
