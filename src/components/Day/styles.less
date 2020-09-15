@@ -1,4 +1,4 @@
-@import "../../common/colors.less";
+@import '../../common/colors.less';
 
 .day {
   display: flex;
@@ -9,32 +9,71 @@
   height: 130px;
   border-left: solid 1px @borderColor;
   cursor: pointer;
-  transition: all .2s;
+  transition: all 0.2s;
   padding: 5px 5px;
+  overflow: hidden;
 
   &:hover {
-      background: @ltGrey;
+    background: @ltGrey;
   }
 
   &:first-child {
-      border-left:none;
+    border-left: none;
   }
 
   &.today {
-      background: @ltSecondary;
+    background: @ltSecondary;
   }
 
   &.different-month {
-      color: @mdGrey;
+    color: @mdGrey;
   }
 
   &.selected {
-      background: @secondary;
-      color: @white;
+    //   background: @secondary;
+    //   color: @white;
   }
 
   &.weekend {
-      color: @dkSecondary;
-      background-color: @ltGrey;
+    color: @dkSecondary;
+    background-color: @ltGrey;
+  }
+
+  .reminder {
+    height: 20px;
+    width: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+
+    &.orange {
+      background-color: orangered;
+    }
+
+    &.blue {
+      background-color: #0080f7;
+      color: @white;
+    }
+
+    &.yellow {
+      background-color: #f7b100;
+    }
+
+    &.grey {
+      background-color: @dkGrey;
+    }
+
+    &.pink {
+      background-color: #d640ff;
+    }
+
+    &.green {
+      background-color: #2abd5b;
+    }
+
+    &.red {
+      background-color: #f21f1f;
+      color: @white;
+    }
   }
 }

@@ -12,7 +12,7 @@ hours = hours.map(h => {
   );
 });
 
-let colors = ['Orange', 'Blue', 'Yellow', 'Grey'];
+let colors = ['orange', 'blue', 'yellow', 'grey', 'pink', 'green', 'red'];
 colors = colors.map(color => {
   return (
     <option key={color} value={color}>
@@ -23,7 +23,7 @@ colors = colors.map(color => {
 
 const ReminderModal = ({ modalOpen, showModal, submit }) => {
   const handleClose = () => showModal(false);
-  const [color, setColor] = useState('Orange');
+  const [color, setColor] = useState('orange');
   const [hour, setHour] = useState('00:00');
   const [title, setTitle] = useState('');
 

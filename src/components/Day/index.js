@@ -28,7 +28,7 @@ const Day = props => {
       {number}
       {
         dayReminders.map(r => {
-          return <p>{r.title}</p>
+          return <div className={`reminder ${r.color}`}>{r.title}</div>
         })
       }
     </div>
