@@ -2,14 +2,14 @@ import React, { useState } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 
-import { addReminder, editReminder, removeReminder } from '../../redux';
+import { addReminder, editReminder, removeReminder, removeAll } from '../../redux';
 
 import DayNames from '../DayNames';
 import Week from '../Week';
 import ReminderModal from '../ReminderModal';
 import './styles.css';
 
-const Calendar = ({ addReminder, editReminder, removeReminder }) => {
+const Calendar = ({ addReminder, editReminder, removeReminder, removeAll }) => {
   const [month, setMonth] = useState(moment());
   const [selected, setSelected] = useState(moment().startOf('day'));
   const [selectedReminder, setSelectedReminder] = useState(null);
@@ -36,6 +36,12 @@ const Calendar = ({ addReminder, editReminder, removeReminder }) => {
   const closeReminder = () => {
     setModalOpen(false)
     setSelectedReminder(null)
+  }
+
+  const removeReminders = () => {
+    console.log('chamou')
+    removeAll(selected)
+    closeReminder();
   }
 
   const selectReminder = reminder => {
@@ -118,6 +124,7 @@ const Calendar = ({ addReminder, editReminder, removeReminder }) => {
         edit={editReminder_}
         reminder={selectedReminder}
         removeReminder={removeReminder_}
+        removeAllReminders={removeReminders}
       />
     </section>
   );
@@ -131,6 +138,7 @@ const mapDispatchToProps = {
   addReminder,
   editReminder,
   removeReminder,
+  removeAll,
 };
 
 const CalendarContainer = connect(mapStateToProps, mapDispatchToProps)(Calendar);

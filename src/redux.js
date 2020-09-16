@@ -17,10 +17,16 @@ export const removeReminder = reminder => ({
   payload: { day: reminder.day, id: reminder.id },
 });
 
+export const removeAll = day => {
+  return ({
+    type: 'REMOVE_ALL',
+    payload: { day: day },
+  });
+}
+
 const addReminder2 = (reminders, action) => {
   const { day } = action.payload;
   let dayStr = moment(day).format('MM/DD/YYYY');
-  // let reminders = state.reminders;
   if (reminders[dayStr]) {
     let id = reminders[dayStr].length + 1;
     reminders[dayStr].push({ ...action.payload, id: id });
@@ -50,7 +56,7 @@ export const reminders = (state = { reminders: [] }, action) => {
     case 'EDIT_REMINDER': {
       const { oldDay } = action.payload;
       let oldDayStr = moment(oldDay).format('MM/DD/YYYY');
-      let reminders = state.reminders;
+      let { reminders } = state;
       let oldReminder = reminders[oldDayStr].find(r => {
         return r.id === action.payload.id;
       });
@@ -63,6 +69,14 @@ export const reminders = (state = { reminders: [] }, action) => {
     case 'REMOVE_REMINDER': {
       const { day, id } = action.payload;
       return { ...state, reminders: removeReminder2(state.reminders, day, id) };
+    }
+
+    case 'REMOVE_ALL': {
+      const { day } = action.payload;
+      let dayStr = moment(day).format('MM/DD/YYYY');
+      let { reminders } = state;
+      delete reminders[dayStr];
+      return { ...state, reminders: reminders };
     }
 
     default:

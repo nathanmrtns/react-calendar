@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import moment from 'moment';
+import './styles.css';
 
 let hours = [...Array(24).keys()];
 hours = hours.map(h => {
@@ -24,7 +25,7 @@ colors = colors.map(color => {
 
 const url = 'http://api.weatherapi.com/v1/forecast.json?key=5c358cfe8648402c99c185918201609&q=';
 
-const ReminderModal = ({ modalOpen, closeModal, reminder, create, edit, removeReminder }) => {
+const ReminderModal = ({ modalOpen, closeModal, reminder, create, edit, removeReminder, removeAllReminders }) => {
   useEffect(() => {
     if (reminder) {
       setColor(reminder.color);
@@ -58,6 +59,7 @@ const ReminderModal = ({ modalOpen, closeModal, reminder, create, edit, removeRe
     setLocation('');
     setTitle('');
     setWeather('');
+    setErrorMessage('');
     closeModal();
   };
 
@@ -88,9 +90,14 @@ const ReminderModal = ({ modalOpen, closeModal, reminder, create, edit, removeRe
     }
   };
 
+  const removeAll = () => {
+    removeAllReminders();
+    handleClose();
+  };
+
   return (
     <>
-      <Modal size="lg" show={modalOpen} onHide={handleClose}>
+      <Modal size="lg" className="reminder-modal" show={modalOpen} onHide={handleClose}>
         <Modal.Header closeButton>
           <Modal.Title>{!reminder ? 'Create' : 'Edit'} Reminder</Modal.Title>
         </Modal.Header>
@@ -136,15 +143,18 @@ const ReminderModal = ({ modalOpen, closeModal, reminder, create, edit, removeRe
                 </>
               )}
 
-              {errorMessage && <span>{errorMessage}</span>}
+              {errorMessage && <p className="error-message">{errorMessage}</p>}
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
           <span>{weather}</span>
-          <Button variant="danger" onClick={removeReminder}>
-            Delete this day reminders
-          </Button>
+          {!reminder && (
+            <Button variant="danger" onClick={removeAll}>
+              Delete this day reminders
+            </Button>
+          )}
+
           {reminder && (
             <Button variant="danger" onClick={removeReminder}>
               Delete
