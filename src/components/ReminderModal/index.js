@@ -22,6 +22,8 @@ colors = colors.map(color => {
   );
 });
 
+const url = 'http://api.weatherapi.com/v1/forecast.json?key=5c358cfe8648402c99c185918201609&q=';
+
 const ReminderModal = ({ modalOpen, closeModal, reminder, create, edit, removeReminder }) => {
   useEffect(() => {
     if (reminder) {
@@ -29,35 +31,60 @@ const ReminderModal = ({ modalOpen, closeModal, reminder, create, edit, removeRe
       setHour(reminder.hour);
       setLocation(reminder.location);
       setTitle(reminder.title);
-      setDay(moment(reminder.day).format('MM/DD/YYYY'))
+      setDay(moment(reminder.day).format('MM/DD/YYYY'));
+
+      fetchWeather(reminder);
     }
   }, [reminder]);
 
+  const fetchWeather = async reminder => {
+    const response = await fetch(`${url}${reminder.location}&days=10`);
+    if (response.status === 200) {
+      const weather = await response.json();
+      const forecastDays = weather.forecast.forecastday;
+      let exactDay = forecastDays.find(fd => {
+        return fd.date === moment(reminder.day).format('YYYY-MM-DD');
+      });
+      const firstForecast = weather.forecast.forecastday[0].day.condition.text;
+      let condition = exactDay ? exactDay.day.condition.text : firstForecast;
+
+      setWeather(condition);
+    }
+  };
+
   const handleClose = () => {
-    setColor('');
+    setColor('orange');
     setHour('');
     setLocation('');
     setTitle('');
+    setWeather('');
     closeModal();
   };
 
   const [color, setColor] = useState('orange');
-  const [hour, setHour] = useState('2');
-  const [title, setTitle] = useState('aa');
-  const [location, setLocation] = useState('aa');
+  const [hour, setHour] = useState('');
+  const [title, setTitle] = useState('');
+  const [location, setLocation] = useState('');
   const [day, setDay] = useState('');
+  const [weather, setWeather] = useState('');
+  const [errorMessage, setErrorMessage] = useState('');
 
   const submitReminder = () => {
     if (reminder) {
       let oldDay = reminder.day;
       let newDay = moment(day);
-      const newReminder = { ...reminder, day: newDay, title, location, hour, color };
-      edit(newDay, oldDay, newReminder);
-    }
-    if (!reminder && title && hour && location) {
+      if (newDay.isValid()) {
+        const newReminder = { ...reminder, day: newDay, title, location, hour, color };
+        edit(newDay, oldDay, newReminder);
+      } else {
+        setErrorMessage('Invalid date!');
+      }
+    } else if (!reminder && title && hour && location) {
       const newReminder = { title, location, hour, color };
       create(newReminder);
       handleClose();
+    } else {
+      setErrorMessage('Please check if all field are filled!');
     }
   };
 
@@ -108,13 +135,22 @@ const ReminderModal = ({ modalOpen, closeModal, reminder, create, edit, removeRe
                   />
                 </>
               )}
+
+              {errorMessage && <span>{errorMessage}</span>}
             </Form.Group>
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <Button variant="secondary" onClick={removeReminder}>
-            Delete
+          <span>{weather}</span>
+          <Button variant="danger" onClick={removeReminder}>
+            Delete this day reminders
           </Button>
+          {reminder && (
+            <Button variant="danger" onClick={removeReminder}>
+              Delete
+            </Button>
+          )}
+
           <Button variant="secondary" onClick={handleClose}>
             Close
           </Button>

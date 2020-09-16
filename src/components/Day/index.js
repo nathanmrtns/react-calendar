@@ -19,7 +19,6 @@ const Day = props => {
   const showDetails = reminder => e => {
     e.stopPropagation();
     selectReminder(reminder);
-    console.log(reminders);
   }
 
   return (
