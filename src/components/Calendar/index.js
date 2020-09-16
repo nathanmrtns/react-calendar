@@ -2,47 +2,71 @@ import React, { useState } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 
-import { addReminder } from '../../redux';
+import { addReminder, editReminder, removeReminder } from '../../redux';
 
 import DayNames from '../DayNames';
 import Week from '../Week';
 import ReminderModal from '../ReminderModal';
 import './styles.css';
 
-const Calendar = ({reminders, addReminder}) => {
+const Calendar = ({ addReminder, editReminder, removeReminder }) => {
   const [month, setMonth] = useState(moment());
   const [selected, setSelected] = useState(moment().startOf('day'));
+  const [selectedReminder, setSelectedReminder] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
-
   const showModal = isOpen => {
     setModalOpen(isOpen);
+  };
+
+  const submitReminder = reminder => {
+    addReminder(selected, reminder);
+    closeReminder()
+  };
+
+  const editReminder_ = (newDay, oldDay, reminder) => {
+    editReminder(newDay, oldDay, reminder);
+    closeReminder()
+  };
+
+  const removeReminder_ = () => {
+    removeReminder(selectedReminder)
+    closeReminder();
   }
 
-  const submitReminder = (title, hour, color) => {
-    addReminder(selected, title, hour, color)
-    setModalOpen(false);
+  const closeReminder = () => {
+    setModalOpen(false)
+    setSelectedReminder(null)
   }
+
+  const selectReminder = reminder => {
+    setSelectedReminder(reminder);
+    setModalOpen(true);
+  };
 
   const previous = () => {
-    const newMonth = month.subtract(1, 'month').clone()
+    const newMonth = month.subtract(1, 'month').clone();
     setMonth(newMonth);
   };
 
   const next = () => {
-    const newMonth = month.add(1, 'month').clone()
+    const newMonth = month.add(1, 'month').clone();
     setMonth(newMonth);
   };
 
   const select = day => {
     setSelected(day.date);
     setMonth(day.date.clone());
-    showModal(true)
+    showModal(true);
   };
 
   const renderWeeks = () => {
     let weeks = [];
     let done = false;
-    let date = month.clone().startOf('month').add('w' - 1).day('Sunday');
+    let date = month
+      .clone()
+      .startOf('month')
+      .add('w' - 1)
+      .day('Sunday');
     let count = 0;
     let monthIndex = date.month();
 
@@ -54,6 +78,8 @@ const Calendar = ({reminders, addReminder}) => {
           month={month}
           select={day => select(day)}
           selected={selected}
+          selectReminder={selectReminder}
+          closeReminder={closeReminder}
         />,
       );
 
@@ -74,14 +100,25 @@ const Calendar = ({reminders, addReminder}) => {
     <section className="calendar">
       <header className="header">
         <div className="month-display row">
-          <span className="arrow" onClick={previous}>{'<'}</span>
+          <span className="arrow" onClick={previous}>
+            {'<'}
+          </span>
           {renderMonthLabel()}
-          <span className="arrow" onClick={next}>{'>'}</span>
+          <span className="arrow" onClick={next}>
+            {'>'}
+          </span>
         </div>
         <DayNames />
       </header>
       {renderWeeks()}
-      <ReminderModal modalOpen={isModalOpen} showModal={showModal} submit={submitReminder}/>
+      <ReminderModal
+        modalOpen={isModalOpen}
+        closeModal={closeReminder}
+        create={submitReminder}
+        edit={editReminder_}
+        reminder={selectedReminder}
+        removeReminder={removeReminder_}
+      />
     </section>
   );
 };
@@ -92,11 +129,10 @@ const mapStateToProps = state => ({
 
 const mapDispatchToProps = {
   addReminder,
+  editReminder,
+  removeReminder,
 };
 
-const CalendarContainer = connect(
-  mapStateToProps,
-  mapDispatchToProps,
-)(Calendar);
+const CalendarContainer = connect(mapStateToProps, mapDispatchToProps)(Calendar);
 
 export default CalendarContainer;

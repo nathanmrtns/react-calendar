@@ -2,7 +2,7 @@ import React from 'react';
 
 import Day from '../Day';
 import './styles.css';
-const Week = ({date, month, selected, select}) => {
+const Week = ({date, month, selected, select, selectReminder}) => {
   let days = [];
   for (var i = 0; i < 7; i++) {
     let day = {
@@ -13,7 +13,8 @@ const Week = ({date, month, selected, select}) => {
       date: date,
       isWeekend: (date.day() === 0 || date.day() === 6),
     };
-    days.push(<Day key={i} day={day} selected={selected} select={select} />);
+    days.push(<Day key={i} day={day} selected={selected} select={select}
+      selectReminder={selectReminder} />);
 
     date = date.clone();
     date.add(1, 'day');

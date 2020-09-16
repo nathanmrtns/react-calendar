@@ -2,16 +2,25 @@ import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
+import {removeReminder} from '../../redux'
+
 import './styles.css'
 const Day = props => {
   const {
     day,
     day: { date, isCurrentMonth, isToday, number, isWeekend },
     select,
+    selectReminder,
     selected,
     reminders,
   } = props;
   const dayReminders = reminders[Object.keys(reminders).filter(k => moment(k).isSame(date))] || [];
+
+  const showDetails = reminder => e => {
+    e.stopPropagation();
+    selectReminder(reminder);
+    console.log(reminders);
+  }
 
   return (
     <div
@@ -27,8 +36,8 @@ const Day = props => {
     >
       {number}
       {
-        dayReminders.map(r => {
-          return <div className={`reminder ${r.color}`}>{r.title}</div>
+        dayReminders.map((r, i) => {
+          return <div key={i} className={`reminder ${r.color}`} onClick={showDetails(r)}>{r.title}</div>
         })
       }
     </div>
@@ -36,9 +45,13 @@ const Day = props => {
 };
 
 const mapStateToProps = state => state.reminders;
+const mapDispatchToProps = {
+  removeReminder,
+}
 
 const DayContainer = connect(
   mapStateToProps,
+  mapDispatchToProps,
 )(Day);
 
 export default DayContainer;
