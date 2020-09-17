@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import moment from 'moment';
 import { connect } from 'react-redux';
 
-import { addReminder, editReminder, removeReminder, removeAll } from '../../redux';
+import { addReminder, editReminder, removeReminder, removeAll } from '../../actions';
 
 import DayNames from '../DayNames';
 import Week from '../Week';
@@ -14,6 +14,7 @@ const Calendar = ({ addReminder, editReminder, removeReminder, removeAll }) => {
   const [selected, setSelected] = useState(moment().startOf('day'));
   const [selectedReminder, setSelectedReminder] = useState(null);
   const [isModalOpen, setModalOpen] = useState(false);
+  
   const showModal = isOpen => {
     setModalOpen(isOpen);
   };
@@ -39,7 +40,6 @@ const Calendar = ({ addReminder, editReminder, removeReminder, removeAll }) => {
   }
 
   const removeReminders = () => {
-    console.log('chamou')
     removeAll(selected)
     closeReminder();
   }

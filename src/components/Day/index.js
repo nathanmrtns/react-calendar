@@ -2,7 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import moment from 'moment';
 
-import {removeReminder} from '../../redux'
+import {removeReminder} from '../../actions'
 
 import './styles.css'
 const Day = props => {
@@ -14,6 +14,7 @@ const Day = props => {
     selected,
     reminders,
   } = props;
+  
   const dayReminders = reminders[Object.keys(reminders).filter(k => moment(k).isSame(date))] || [];
 
   const showDetails = reminder => e => {
