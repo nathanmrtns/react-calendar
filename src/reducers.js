@@ -5,6 +5,7 @@ import {formatDate} from './helpers/helpers';
 const addReminder = (reminders, action) => {
   const { day } = action.payload;
   let dayStr = formatDate(day);
+
   if (reminders[dayStr]) {
     let id = reminders[dayStr].length + 1;
     reminders[dayStr].push({ ...action.payload, id: id });
@@ -24,7 +25,7 @@ const removeReminder = (reminders, day, id) => {
   return newReminders;
 };
 
-export const reminders = (state = { reminders: [] }, action) => {
+export const reminders = (state = { reminders: {} }, action) => {
   switch (action.type) {
     case 'ADD_REMINDER': {
       return { ...state, reminders: addReminder(state.reminders, action) };

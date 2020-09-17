@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Modal, Button, Form } from 'react-bootstrap';
 import moment from 'moment';
+
+import { formatDate } from '../../helpers/helpers';
 import './styles.css';
 
 let hours = [...Array(24).keys()];
@@ -23,7 +25,7 @@ colors = colors.map(color => {
   );
 });
 
-const url = 'http://api.weatherapi.com/v1/forecast.json?key=5c358cfe8648402c99c185918201609&q=';
+const WEATHER_URL = 'http://api.weatherapi.com/v1/forecast.json?key=5c358cfe8648402c99c185918201609&q=';
 
 const ReminderModal = ({ modalOpen, closeModal, reminder, create, edit, removeReminder, removeAllReminders }) => {
   useEffect(() => {
@@ -32,14 +34,14 @@ const ReminderModal = ({ modalOpen, closeModal, reminder, create, edit, removeRe
       setHour(reminder.hour);
       setLocation(reminder.location);
       setTitle(reminder.title);
-      setDay(moment(reminder.day).format('MM/DD/YYYY'));
+      setDay(formatDate(moment(reminder.day)));
 
       fetchWeather(reminder);
     }
   }, [reminder]);
 
   const fetchWeather = async reminder => {
-    const response = await fetch(`${url}${reminder.location}&days=10`);
+    const response = await fetch(`${WEATHER_URL}${reminder.location}&days=10`);
     if (response.status === 200) {
       const weather = await response.json();
       const forecastDays = weather.forecast.forecastday;
@@ -148,7 +150,7 @@ const ReminderModal = ({ modalOpen, closeModal, reminder, create, edit, removeRe
           </Form>
         </Modal.Body>
         <Modal.Footer>
-          <span>{weather}</span>
+          {weather && <div className="weather">Weather in this day: {weather}</div>}
           {!reminder && (
             <Button variant="danger" onClick={removeAll}>
               Delete this day reminders
