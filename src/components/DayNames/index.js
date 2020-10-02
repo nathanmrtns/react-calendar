@@ -2,8 +2,7 @@ import React from 'react';
 
 import './styles.css'
 
-const DayNames = () => {
-  return (
+const DayNames = () => (
     <div className="row day-names">
       <span className="day weekend">Sun</span>
       <span className="day">Mon</span>
@@ -13,7 +12,6 @@ const DayNames = () => {
       <span className="day">Fri</span>
       <span className="day weekend">Sat</span>
     </div>
-  );
-};
+);
 
 export default DayNames;
